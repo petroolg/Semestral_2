@@ -542,8 +542,9 @@ class SolutionViewer(tk.Frame):
                          '"forward" symbol. Traceback will be written to '
                          'the standard error output.')
             raise
-        threading.Thread(target=self.solve).start()
-        self.after(100, self._wait_for_solve)
+        #threading.Thread(target=self.solve).start()
+        #self.after(100, self._wait_for_solve)
+        self.solve()
 
     # noinspection PyProtectedMember
     def solve(self):
