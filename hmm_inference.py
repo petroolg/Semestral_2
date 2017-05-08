@@ -222,21 +222,21 @@ def viterbi(priors, e_seq, hmm):
     print('Inside')
     print(e_seq)
     ms.append(forward1(priors, e_seq[0], hmm))
-    
+
     for obs in e_seq[1:]:
         cur_m, predecessors = viterbi1(ms[-1], obs, hmm)
         ms.append(cur_m)
         bestPredecessors.append(predecessors)
-        
+
     m = -1
     finalState = None
     for key in ms[-1]:
         if(ms[-1][key] > m):
             finalState = key
             m = ms[-1][key]
-        
+
     ml_seq = viterbi_ML(finalState, bestPredecessors)
-        
+
     return ml_seq, ms
 
 def viterbi_bestPrevState(currState, bestPredecessors):
@@ -251,5 +251,5 @@ def viterbi_ML(finalState, bestPredecessors):
     mlseq.append(finalState)
     for bestPred in bp:
         mlseq.append(viterbi_bestPrevState(mlseq[-1], bestPred))
-    mlseq.reverse()
+    # mlseq.reverse()
     return mlseq
