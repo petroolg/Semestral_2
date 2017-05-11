@@ -96,7 +96,7 @@ class Adapter():
         algorithm... Maybe after row denormalization and removal of logs it will be ok?
         '''
         obsSeq = mergeChars(obsSeq)
-        obsSeq.reverse()
+        #obsSeq.reverse()
         mat = self.model.forward_backward(obsSeq)
         mat = np.exp(np.array(mat[1]))
         for row in range(0,mat.shape[0]):
@@ -116,6 +116,6 @@ class Adapter():
             ml_state = self.model.viterbi(obsSeq[0:i])
             ml_state = ml_state[1][-1]
             mls.append(self.freePos[self.states.index(ml_state[1])])
-        mls.reverse()
+        #mls.reverse()
         ms = None
         return mls, ms
