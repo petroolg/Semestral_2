@@ -5,7 +5,7 @@ BE3M33UI - Artificial Intelligence course, FEE CTU in Prague
 """
 
 
-from hmm_inference import *
+from hmm_inference_pom import *
 from robot import *
 from utils import normalized
 
@@ -18,7 +18,7 @@ direction_probabilities = {
 
 def init_maze():
     """Create and initialize robot instance for subsequent test"""
-    m = Maze('mazes/rect_6x10_obstacles.map')
+    m = Maze('mazes/rect_3x2_empty.map.map')
     print(m)
 #    robot = Robot(ALL_DIRS, direction_probabilities)
     robot = Robot()
@@ -78,7 +78,7 @@ def test_filtering():
 def test_smoothing():
     """Try to run smoothing for robot domain"""
     robot = init_maze()
-    states, obs = robot.simulate(init_state=(1,10), n_steps=3)
+    states, obs = robot.simulate(init_state=(1,1), n_steps=5)
     print('Running smoothing...')
     initial_belief = normalized({pos: 1 for pos in robot.get_states()})
     beliefs = forwardbackward(initial_belief, obs, robot)
@@ -105,7 +105,7 @@ if __name__=='__main__':
     print('Uncomment some of the tests in the main section')
     #test_pt()
     #test_pe()
-    test_simulate()
-    #test_filtering()
+    #test_simulate()
+    test_filtering()
     #test_smoothing()
     #test_viterbi()
