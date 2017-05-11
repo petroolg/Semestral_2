@@ -1,7 +1,7 @@
 from scipy.spatial import distance
 
 from robot import *
-from hmm_inference import *
+from hmm_inference_yahmm import *
 import numpy as np
 import scipy
 from scipy import spatial as sp
@@ -9,16 +9,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-N_STEPS = 20
-SCALE =20
-MAX_DIST = 7
-N_DIST = MAX_DIST*SCALE
+N_STEPS = 100
+N_MAZES =2
 #weighted Manhattan distances from real positions
-dev = [[0]*N_DIST,[0]*N_DIST,[0]*N_DIST]
+dev = [[0]*N_STEPS*2,[0]*N_STEPS*2,[0]*N_STEPS*2]
+acc = [0, 0, 0]
+path = 'mazes/free_space/'
+titles = ['Forward', 'Forward-backward','Viterbi']
 
-for maze in os.listdir('mazes/'):
+for maze in os.listdir(path):
 
-    m = Maze('mazes/'+maze)
+    m = Maze(path+maze)
     print(maze)
     open_pos = []
     for row in range(0,m.height):
@@ -42,6 +43,7 @@ for maze in os.listdir('mazes/'):
 
     print("predictions")
     for i, (f, fb, v, s, o) in enumerate(zip(forw, forw_backw, vtrb[0], states, observations)):
+    # for i, (f, s, o) in enumerate(zip(forw, states, observations)):
         # print('Step:', i + 1, '| State:', s, '| Observation:', o)
         # print("Forward algorithm")
         # for p in f.most_common()[:4]:
@@ -54,33 +56,45 @@ for maze in os.listdir('mazes/'):
         # print("\n")
 
         dist = 0
+        mc = f.most_common()
         for p in f.most_common():
             if p[1] == 0:
                 break
             dist += sp.distance.cityblock(p[0], s)*p[1]
-        dev[0][int(dist*SCALE)] += 1
+            if dist == 0 and p[1] == (f.most_common())[0][1]:
+                acc[0] += 1
+        dev[0].append(dist)
 
         dist = 0
         for p in fb.most_common():
             if p[1] == 0:
                 break
             dist += sp.distance.cityblock(p[0], s) * p[1]
-        dev[1][int(dist*SCALE)] += 1
+            if dist == 0 and p[1] == (fb.most_common())[0][1]:
+                acc[1] += 1
+        dev[1].append(dist)
 
         dist = sp.distance.cityblock(v, s)
-        dev[2][int(dist*SCALE)] += 1
+        dev[2].append(dist)
+        if dist ==0:
+            acc[2] += 1
 
-x = list(np.linspace(0,MAX_DIST,num = N_DIST))
-width =1/1.5
-fig, ax = plt.subplots(nrows=1,ncols=3, sharey=True, figsize=(9,2))
+#accuracy
+acc = np.array(acc) / (N_MAZES *N_STEPS)
+
+#distributions & percentile
+fig, ax = plt.subplots(nrows=1,ncols=3, sharex=True, figsize=(8,1))
 plt.tight_layout()
-titles = ['Forward algorithm', 'Forward-backward algorithm','Viterbi algorithm']
 
 for i in range(0,3):
-    plt.subplot(1, 3, (i+1))
-    plt.bar(x, dev[i], width)
+    print('Distribution of', titles[i], 'algorithm: mean =', "%.2f" % np.mean(dev[i]), ', std =', "%.2f" % np.std(dev[i]))
+    print('Accuracy of', titles[i], 'algorithm is', "%.2f" % acc[i])
+    print('Radius of reliability area for', titles[i], 'algorithm is',np.percentile(dev[i],90))
+    plt.subplot(1,3, (i+1))
+    # plt.bar(x, dev[i], width)
+    plt.hist(dev[i])
     plt.title(titles[i])
     plt.xlabel('Weighted Manhattan distance from real position')
     plt.ylabel('Frequency')
-
+    print('\n')
 plt.show()
