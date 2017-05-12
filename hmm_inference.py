@@ -219,8 +219,6 @@ def viterbi(priors, e_seq, hmm):
     ms = []      # Sequence of max messages
     bestPredecessors = []
     # Your code here
-    print('Inside')
-    print(e_seq)
     ms.append(forward1(priors, e_seq[0], hmm))
 
     for obs in e_seq[1:]:

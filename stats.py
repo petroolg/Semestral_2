@@ -1,5 +1,5 @@
 from robot import *
-from hmm_inference_yahmm import *
+from hmm_inference import *
 from scipy import spatial as sp
 import matplotlib.pyplot as plt
 import numpy as np
@@ -8,7 +8,7 @@ import os
 Utility script, for experiments and graphical representation of results.
 '''
 
-N_STEPS = 100
+N_STEPS = 10
 N_MAZES =2
 #weighted Manhattan distances from real positions
 dev = [[],[],[]]
