@@ -1,7 +1,7 @@
 from scipy.spatial import distance
 
 from robot import *
-from hmm_inference_yahmm import *
+from hmm_inference import *
 import numpy as np
 import scipy
 from scipy import spatial as sp
@@ -12,9 +12,9 @@ import os
 N_STEPS = 100
 N_MAZES =2
 #weighted Manhattan distances from real positions
-dev = [[0]*N_STEPS*2,[0]*N_STEPS*2,[0]*N_STEPS*2]
+dev = [[],[],[]]
 acc = [0, 0, 0]
-path = 'mazes/free_space/'
+path = 'mazes/big_obst/'
 titles = ['Forward', 'Forward-backward','Viterbi']
 
 for maze in os.listdir(path):
@@ -89,12 +89,13 @@ plt.tight_layout()
 for i in range(0,3):
     print('Distribution of', titles[i], 'algorithm: mean =', "%.2f" % np.mean(dev[i]), ', std =', "%.2f" % np.std(dev[i]))
     print('Accuracy of', titles[i], 'algorithm is', "%.2f" % acc[i])
-    print('Radius of reliability area for', titles[i], 'algorithm is',np.percentile(dev[i],90))
+    print('Radius of reliability area for', titles[i], 'algorithm is',"%.2f" % np.percentile(dev[i],90))
     plt.subplot(1,3, (i+1))
     # plt.bar(x, dev[i], width)
-    plt.hist(dev[i])
+    weights = np.ones_like(dev[i]) / float(len(dev[i]))
+    plt.hist(dev[i],weights=weights)
     plt.title(titles[i])
     plt.xlabel('Weighted Manhattan distance from real position')
-    plt.ylabel('Frequency')
+    plt.ylabel('Frequency of occurrence')
     print('\n')
 plt.show()
