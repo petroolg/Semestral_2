@@ -1,7 +1,7 @@
 """
 Functions for inference in HMMs
-
-BE3M33UI - Artificial Intelligence course, FEE CTU in Prague
+Interface for yahmm library, it has got same usage as inference functions
+in hmm_inference.py
 """
 
 from collections import Counter
@@ -23,32 +23,10 @@ def forward(init_f, e_seq, hmm):
     return fs
 
 
-def likelihood(prior, e_seq, hmm):
-    """Compute the likelihood of the model wrt the evidence sequence
-
-    In other words, compute the marginal probability of the evidence sequence.
-    :param prior: Counter, initial belief distribution over states
-    :param e_seq: sequence of observations
-    :param hmm: contains the transition and emission models
-    :return: number, likelihood
-    """
-    l_t = Counter(Counter())
-    l_t = prior
-
-    for obs in e_seq:
-        l_t = forward1(l_t, obs, hmm)
-
-    L_t = 0
-    for state in hmm.X_domain:
-        L_t = L_t + l_t[state]
-    lhood = L_t
-    return lhood
-
-
 def forwardbackward(priors, e_seq, hmm):
     """Compute the smoothed belief states given the observation sequence
 
-    :param priors: Counter, initial belief distribution over rge states
+    :param priors: Counter, initial belief distribution over states
     :param e_seq: sequence of observations
     :param hmm: HMM, contians the transition and emission models
     :return: sequence of Counters, estimates of belief states for all time slices
