@@ -1,13 +1,12 @@
-from scipy.spatial import distance
-
 from robot import *
 from hmm_inference_yahmm import *
-import numpy as np
-import scipy
 from scipy import spatial as sp
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+'''
+Utility script, for experiments and graphical representation of results.
+'''
 
 N_STEPS = 100
 N_MAZES =2
