@@ -1,7 +1,7 @@
 from scipy.spatial import distance
 
 from robot import *
-from hmm_inference import *
+from hmm_inference_yahmm import *
 import numpy as np
 import scipy
 from scipy import spatial as sp
